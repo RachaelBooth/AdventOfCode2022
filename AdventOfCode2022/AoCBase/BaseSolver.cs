@@ -1,9 +1,12 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using AoCHelper;
 
 namespace AoCBase
 {
-    public abstract class BaseSolver : BaseProblem
+    public abstract class BaseSolver<U> : BaseSolver<U, U> {};
+
+    public abstract class BaseSolver<U, V> : BaseProblem
     {
         protected override string ClassPrefix { get; } = "Solver";
 
@@ -31,6 +34,20 @@ namespace AoCBase
 
             var index = CalculateIndex().ToString("D2");
             return Path.Combine(InputFileDirPath, $"{index}.{fileSuffix}.{InputFileExtension.TrimStart('.')}");
+        }
+
+        protected abstract U Solve1();
+
+        public override ValueTask<string> Solve_1()
+        {
+            return new(Solve1().ToString());
+        }
+
+        protected abstract V Solve2();
+
+        public override ValueTask<string> Solve_2()
+        {
+            return new(Solve2().ToString());
         }
     }
 }

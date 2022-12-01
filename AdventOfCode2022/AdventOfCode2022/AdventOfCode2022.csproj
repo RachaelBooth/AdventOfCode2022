@@ -11,4 +11,14 @@
     <PackageReference Include="AoCHelper" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AoCBase\AoCBase.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Inputs\01.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
