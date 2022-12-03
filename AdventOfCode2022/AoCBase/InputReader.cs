@@ -129,6 +129,31 @@ namespace AoCBase
             reader.Close();
         }
 
+        public IEnumerable<List<T>> ReadInputAsBatchedLines(int batchSize)
+        {
+            var reader = new StreamReader(inputFilePath);
+            string line;
+
+            var currentLines = new List<T>();
+            while ((line = reader.ReadLine()) != null)
+            {
+                currentLines.Add(ParseLine(line));
+                if (currentLines.Count == batchSize)
+                {
+                    yield return currentLines.ToList();
+                    currentLines = new List<T>();
+                }
+            }
+
+            // If the final group is not empty but didn't reach the batch size then return it
+            if (currentLines.Any())
+            {
+                yield return currentLines;
+            }
+
+            reader.Close();
+        }
+
         public IEnumerable<T> ReadInputAsLineGroups()
         {
             var reader = new StreamReader(inputFilePath);
