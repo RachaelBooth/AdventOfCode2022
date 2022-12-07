@@ -118,13 +118,49 @@ namespace AoCBase
             }
         }
 
-        public static U ReadWithDefault<T, U>(this Dictionary<T, U> dict, T key, U defaultValue = default)
+        public static U ReadWithDefault<T, U>(this Dictionary<T, U> dict, T key, U defaultValue = default, bool addDefaultToDict = false)
         {
             if (dict.ContainsKey(key))
             {
                 return dict[key];
             }
+
+            if (addDefaultToDict)
+            {
+                dict.Add(key, defaultValue);
+                return dict[key];
+            }
+
             return defaultValue;
+        }
+
+        public static U ReadWithDefault<T, U>(this Dictionary<T, U> dict, T key, Func<U> defaultConstructor, bool addDefaultToDict = false)
+        {
+            if (dict.ContainsKey(key))
+            {
+                return dict[key];
+            }
+
+            if (addDefaultToDict)
+            {
+                dict.Add(key, defaultConstructor());
+                return dict[key];
+            }
+
+            return defaultConstructor();
+        }
+
+        public static void AddIfKeyNotPresent<T, U>(this Dictionary<T, U> dict, T key, U value)
+        {
+            dict.AddIfKeyNotPresent(key, () => value);
+        }
+
+        public static void AddIfKeyNotPresent<T, U>(this Dictionary<T, U> dict, T key, Func<U> valueConstructor)
+        {
+            if (!dict.ContainsKey(key))
+            {
+                dict.Add(key, valueConstructor());
+            }
         }
 
         public static bool ContainsMatching<T, U>(this Dictionary<T, List<U>> dict, T key, Func<U, bool> matchFunction)
