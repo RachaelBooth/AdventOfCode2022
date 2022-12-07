@@ -72,6 +72,19 @@ namespace AoCBase
             dict.GetValues(key).AddRange(values);
         }
 
+        public static void AddOptionsToStart<T, U>(this Dictionary<T, List<U>> dict, T key, params U[] values)
+        {
+            dict.GetValues(key).InsertRange(0, values);
+        }
+
+        // TODO: Make this safer
+        public static List<U> RemoveFirst<T, U>(this Dictionary<T, List<U>> dict, T key, int count = 1)
+        {
+            var start = dict.GetValues(key).Take(count).ToList();
+            dict.GetValues(key).RemoveRange(0, count);
+            return start;
+        }
+
         /// <summary>
         /// U must have + defined, but can't restrict for that at compile time because C# argh.
         /// </summary>
