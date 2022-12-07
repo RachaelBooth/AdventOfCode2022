@@ -225,6 +225,19 @@ namespace AoCBase
             return result;
         }
 
+        public List<T> ReadInputAsSingleLineByChar()
+        {
+            var reader = new StreamReader(inputFilePath);
+            var line = reader.ReadLine();
+            var result = line.ToCharArray().Select(c => ParseChar(c)).ToList();
+            if (reader.ReadLine() != null)
+            {
+                throw new Exception("Expected single line but got multiple");
+            }
+            reader.Close();
+            return result;
+        }
+
         private T ParseLine(string line)
         {
             if (typeof(T) == typeof(string))
@@ -240,6 +253,16 @@ namespace AoCBase
         {
             var parse = typeof(T).GetMethod("Parse", new Type[] { typeof(List<string>) });
             return (T)parse.Invoke(this, new[] { lines });
+        }
+
+        private T ParseChar(char c)
+        {
+            if (typeof(T) == typeof(char))
+            {
+                return (T)Convert.ChangeType(c, typeof(T));
+            }
+            var parse = typeof(T).GetMethod("Parse", new Type[] { typeof(char) });
+            return (T)parse.Invoke(this, new object[] { c });
         }
     }
 }
