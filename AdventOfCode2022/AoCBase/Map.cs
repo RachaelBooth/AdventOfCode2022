@@ -122,6 +122,11 @@ namespace AoCBase
             }
         }
 
+        public bool ContainsKey(T key)
+        {
+            return _map.ContainsKey(key);
+        }
+
         /// <summary>
         /// Reads the map at location, using the default value for the map if the location is not present.
         /// </summary>
