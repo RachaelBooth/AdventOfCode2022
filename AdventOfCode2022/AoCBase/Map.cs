@@ -12,6 +12,8 @@ namespace AoCBase
 
         public GridMap(Dictionary<(int x, int y), U> map, Func<(int x, int y), Dictionary<(int x, int y), U>, U> defaultValue) : base(map, defaultValue) {}
 
+        public GridMap(HashSet<(int x, int y)> locations, U locationValue, U defaultValue = default) : base(locations.ToDictionary(l => l, l => locationValue), defaultValue) {}
+
         /// <summary>
         /// Draws map to console
         /// Assumes y increases going down

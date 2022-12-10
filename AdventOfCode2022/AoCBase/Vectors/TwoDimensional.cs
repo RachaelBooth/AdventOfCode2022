@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AoCBase.Vectors
@@ -37,6 +38,11 @@ namespace AoCBase.Vectors
         {
             var basicDiffs = new List<(int x, int y)> { (1, 0), (0, 1) };
             return basicDiffs.SelectMany(d => new List<(int x, int y)> { location.Plus(d), location.Minus(d) });
+        }
+
+        public static bool IsWithinSquareRadius(this (int x, int y) location, (int x, int y) other, int squareRadius = 1)
+        {
+            return Math.Abs(location.x - other.x) <= squareRadius && Math.Abs(location.y - other.y) <= squareRadius;
         }
     }
 }
