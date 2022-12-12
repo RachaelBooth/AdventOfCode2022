@@ -53,6 +53,7 @@ namespace AdventOfCode2022.Solvers
 
 
         // Could definitely make this more efficient - reuse above, stop looking after current max etc. But I haven't :shrug:
+        // Or reverse it and find the shortest from the end to any of the starts, with opposite step condition.
         protected override int Solve2()
         {
             var outOfRange = 'X';
