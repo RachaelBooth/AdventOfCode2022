@@ -73,6 +73,7 @@ namespace AoCBase
         internal readonly Dictionary<T, U> _map;
         internal readonly Func<T, Dictionary<T, U>, U> _defaultValue;
         internal readonly Dictionary<(T start, T end), int> _paths;
+        internal readonly Dictionary<(T start, T end), int> _pathsWithoutSymmetry;
         internal readonly Dictionary<(T start, T end), List<(HashSet<U> doors, int steps)>> _pathsWithDoors;
         internal readonly Dictionary<U, List<T>> _reverseMap;
 
@@ -99,6 +100,7 @@ namespace AoCBase
             _map = map;
             _defaultValue = defaultValue;
             _paths = new Dictionary<(T start, T end), int>();
+            _pathsWithoutSymmetry = new Dictionary<(T start, T end), int>();
             _pathsWithDoors = new Dictionary<(T start, T end), List<(HashSet<U> doors, int steps)>>();
             _reverseMap = new Dictionary<U, List<T>>();
         }
@@ -164,11 +166,40 @@ namespace AoCBase
             return !other._map.Any(kv => !ReadWithDefault(kv.Key, false).Equals(kv.Value));
         }
 
-        public int BestPathLength(T start, IEnumerable<T> locationsToVisit, Func<U, bool> isDoor,
-            Func<T, IEnumerable<T>> potentialNeighbours, Func<U, HashSet<U>, HashSet<U>> updatePassableDoors)
+        public int BestPathLengthWithoutSymmetry(T start, IEnumerable<T> locationsToVisit, Func<T, IEnumerable<T>> potentialNeighbours)
         {
-            // QQ implement
-            return 0;
+            var states = new List<(T location, HashSet<T> visited, int steps)> { (start, new HashSet<T>(), 0) };
+            var locations = locationsToVisit.ToList();
+            var i = 0;
+            while (i < locations.Count)
+            {
+                var newStates = new List<(T location, HashSet<T> visited, int steps)>();
+                foreach (var state in states)
+                {
+                    foreach (var possibleNextLocation in locations.Where(l => !state.visited.Contains(l)))
+                    {
+                        var bestPath = BestPathLengthWithoutSymmetry(state.location, possibleNextLocation, potentialNeighbours);
+                        if (bestPath != -1)
+                        {
+                            var newVisited = new HashSet<T>(state.visited);
+                            newVisited.Add(possibleNextLocation);
+                            newStates.Add((possibleNextLocation, newVisited, state.steps + bestPath));
+                        }
+                    }
+                }
+
+                states = newStates;
+                i++;
+            }
+
+            return states.Min(s => s.steps);
+        }
+
+        public int BestPathLengthWithoutSymmetry(T start, T end, Func<T, IEnumerable<T>> potentialNeighbours)
+        {
+            MapBestPathBetweenPointsWithoutSymmetry(start, end, potentialNeighbours);
+
+            return _pathsWithoutSymmetry[(start, end)];
         }
 
         /// <summary>
@@ -265,6 +296,44 @@ namespace AoCBase
 
             _paths.Add((start, end), -1);
             _paths.Add((end, start), -1);
+        }
+
+        private void MapBestPathBetweenPointsWithoutSymmetry(T start, T end, Func<T, IEnumerable<T>> potentialNeighbours)
+        {
+            if (_pathsWithoutSymmetry.ContainsKey((start, end)))
+            {
+                return;
+            }
+
+            var seen = new HashSet<T>();
+            var edgeStates = new List<T> { start };
+            var pathSteps = 0;
+            while (edgeStates.Any())
+            {
+                pathSteps++;
+                var nextStates = new List<T>();
+                foreach (var state in edgeStates)
+                {
+                    foreach (var potential in potentialNeighbours(state))
+                    {
+                        if (potential.Equals(end))
+                        {
+                            _pathsWithoutSymmetry.Add((start, end), pathSteps);
+                            return;
+                        }
+
+                        if (!seen.Contains(potential))
+                        {
+                            seen.Add(potential);
+                            nextStates.Add(potential);
+                        }
+                    }
+
+                    edgeStates = nextStates;
+                }
+            }
+
+            _pathsWithoutSymmetry.Add((start, end), -1);
         }
 
         /// <summary>
