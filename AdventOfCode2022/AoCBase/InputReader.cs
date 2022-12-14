@@ -129,6 +129,22 @@ namespace AoCBase
             reader.Close();
         }
 
+        public IEnumerable<T> ReadInputAsLinesSkippingBlanks()
+        {
+            var reader = new StreamReader(inputFilePath);
+            string line;
+
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (line != "")
+                {
+                    yield return ParseLine(line);
+                }
+            }
+
+            reader.Close();
+        }
+
         public IEnumerable<List<T>> ReadInputAsBatchedLines(int batchSize)
         {
             var reader = new StreamReader(inputFilePath);
