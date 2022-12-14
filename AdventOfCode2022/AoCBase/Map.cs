@@ -8,6 +8,8 @@ namespace AoCBase
     // TODO: Maybe set this up with vectors rather than tuple. 
     public class GridMap<U> : Map<(int x, int y), U>
     {
+        public GridMap(U defaultValue = default) : base(new Dictionary<(int x, int y), U>(), defaultValue) {}
+
         public GridMap(Dictionary<(int x, int y), U> map, U defaultValue = default) : base(map, defaultValue) {}
 
         public GridMap(Dictionary<(int x, int y), U> map, Func<(int x, int y), Dictionary<(int x, int y), U>, U> defaultValue) : base(map, defaultValue) {}
@@ -50,9 +52,23 @@ namespace AoCBase
             }
         }
 
-        public GridMap<U> Copy()
+        public (int minX, int maxX, int minY, int maxY) Bounds()
+        {
+            var minX = _map.Keys.Min(k => k.x);
+            var maxX = _map.Keys.Max(k => k.x);
+            var minY = _map.Keys.Min(k => k.y);
+            var maxY = _map.Keys.Max(k => k.y);
+            return (minX, maxX, minY, maxY);
+        }
+
+        public new GridMap<U> Copy()
         {
             return new GridMap<U>(_map.ToDictionary(kv => kv.Key, kv => kv.Value), _defaultValue);
+        }
+
+        public GridMap<U> Copy(Func<(int x, int y), U> defaultValue)
+        {
+            return new GridMap<U>(_map.ToDictionary(kv => kv.Key, kv => kv.Value), ((int x, int y) l, Dictionary<(int x, int y), U> d) => defaultValue(l));
         }
 
         public int Size()
