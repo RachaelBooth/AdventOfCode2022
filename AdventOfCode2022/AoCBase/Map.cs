@@ -459,6 +459,11 @@ namespace AoCBase
             return _map.Where(kv => locationMatch(kv.Key)).Select(kv => kv.Key).ToList();
         }
 
+        public List<T> LocationsWhereValueMatches(Func<U, bool> valueMatch)
+        {
+            return _map.Where(kv => valueMatch(kv.Value)).Select(kv => kv.Key).ToList();
+        }
+
         public List<T> Keys()
         {
             return _map.Keys.ToList();
