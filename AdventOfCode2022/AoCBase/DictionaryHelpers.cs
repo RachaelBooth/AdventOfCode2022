@@ -62,9 +62,9 @@ namespace AoCBase
             dict[key1].Add(key2, value);
         }
 
-        public static void AddOption<T, U>(this Dictionary<T, HashSet<U>> dict, T key, U value)
+        public static void AddOptions<T, U>(this Dictionary<T, HashSet<U>> dict, T key, params U[] values)
         {
-            dict.GetValues(key).Add(value);
+            dict.GetValues(key).UnionWith(values.ToHashSet());
         }
 
         public static void AddOptions<T, U>(this Dictionary<T, List<U>> dict, T key, params U[] values)
