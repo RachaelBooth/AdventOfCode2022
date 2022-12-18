@@ -6,15 +6,19 @@ using AoCBase.Vectors;
 namespace AoCBase
 {
     // TODO: Maybe set this up with vectors rather than tuple. 
-    public class GridMap<U> : Map<(int x, int y), U>
+    public class GridMap<U> : Map<(long x, long y), U>
     {
-        public GridMap(U defaultValue = default) : base(new Dictionary<(int x, int y), U>(), defaultValue) {}
+        public GridMap(U defaultValue = default) : base(new Dictionary<(long x, long y), U>(), defaultValue) {}
 
-        public GridMap(Dictionary<(int x, int y), U> map, U defaultValue = default) : base(map, defaultValue) {}
+        public GridMap(Func<(long x, long y), U> defaultValue) : base(new Dictionary<(long x, long y), U>(), ((long x, long y) location, Dictionary<(long x, long y), U> map) => defaultValue(location)) {}
 
-        public GridMap(Dictionary<(int x, int y), U> map, Func<(int x, int y), Dictionary<(int x, int y), U>, U> defaultValue) : base(map, defaultValue) {}
+        public GridMap(Func<(long x, long y), Dictionary<(long x, long y), U>, U> defaultValue) : base(new Dictionary<(long x, long y), U>(), defaultValue) {}
 
-        public GridMap(HashSet<(int x, int y)> locations, U locationValue, U defaultValue = default) : base(locations.ToDictionary(l => l, l => locationValue), defaultValue) {}
+        public GridMap(Dictionary<(long x, long y), U> map, U defaultValue = default) : base(map, defaultValue) {}
+
+        public GridMap(Dictionary<(long x, long y), U> map, Func<(long x, long y), Dictionary<(long x, long y), U>, U> defaultValue) : base(map, defaultValue) {}
+
+        public GridMap(HashSet<(long x, long y)> locations, U locationValue, U defaultValue = default) : base(locations.ToDictionary(l => l, l => locationValue), defaultValue) {}
 
         /// <summary>
         /// Draws map to console
@@ -23,7 +27,7 @@ namespace AoCBase
         /// </summary>
         /// <param name="overlayValue"></param>
         /// <param name="overlayLocations"></param>
-        public void Draw(U overlayValue = default, params (int x, int y)[] overlayLocations)
+        public void Draw(U overlayValue = default, params (long x, long y)[] overlayLocations)
         {
             var minX = _map.Keys.Min(k => k.x);
             var maxX = _map.Keys.Max(k => k.x);
@@ -52,7 +56,7 @@ namespace AoCBase
             }
         }
 
-        public (int minX, int maxX, int minY, int maxY) Bounds()
+        public (long minX, long maxX, long minY, long maxY) Bounds()
         {
             var minX = _map.Keys.Min(k => k.x);
             var maxX = _map.Keys.Max(k => k.x);
@@ -66,9 +70,9 @@ namespace AoCBase
             return new GridMap<U>(_map.ToDictionary(kv => kv.Key, kv => kv.Value), _defaultValue);
         }
 
-        public GridMap<U> Copy(Func<(int x, int y), U> defaultValue)
+        public GridMap<U> Copy(Func<(long x, long y), U> defaultValue)
         {
-            return new GridMap<U>(_map.ToDictionary(kv => kv.Key, kv => kv.Value), ((int x, int y) l, Dictionary<(int x, int y), U> d) => defaultValue(l));
+            return new GridMap<U>(_map.ToDictionary(kv => kv.Key, kv => kv.Value), ((long x, long y) l, Dictionary<(long x, long y), U> d) => defaultValue(l));
         }
 
         public int Size()
@@ -77,10 +81,10 @@ namespace AoCBase
         }
     }
 
-    public class RecursiveGridMap<U> : Map<(int x, int y, int z), U>
+    public class RecursiveGridMap<U> : Map<(long x, long y, long z), U>
     {
         public RecursiveGridMap(GridMap<U> map, U defaultValue = default) : base(
-            map._map.ToDictionary(kv => kv.Key.ToThreeDimensions(), kv => kv.Value),
+            map._map.ToDictionary(kv => (kv.Key.x, kv.Key.y, (long) 0), kv => kv.Value),
             (t, d) => d.ContainsKey((t.x, t.y, 0)) ? d[(t.x, t.y, 0)] : defaultValue) {}
     }
 
@@ -462,6 +466,11 @@ namespace AoCBase
         public List<T> LocationsWhereValueMatches(Func<U, bool> valueMatch)
         {
             return _map.Where(kv => valueMatch(kv.Value)).Select(kv => kv.Key).ToList();
+        }
+
+        public List<T> LocationsWhere(Func<T, bool> locationMatch, Func<U, bool> valueMatch)
+        {
+            return _map.Where(kv => locationMatch(kv.Key) && valueMatch(kv.Value)).Select(kv => kv.Key).ToList();
         }
 
         public List<T> Keys()

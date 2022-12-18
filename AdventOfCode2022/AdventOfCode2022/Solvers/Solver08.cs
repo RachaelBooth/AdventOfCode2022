@@ -44,7 +44,7 @@ namespace AdventOfCode2022.Solvers
             return best;
         }
 
-        private (bool found, int stepCount) FindEqualOrTallerTreeInDirection((int x, int y) tree, (int x, int y) direction)
+        private (bool found, int stepCount) FindEqualOrTallerTreeInDirection((long x, long y) tree, (int x, int y) direction)
         {
             var height = trees.ReadWithDefault(tree);
             var step = 1;
@@ -59,7 +59,7 @@ namespace AdventOfCode2022.Solvers
             return (false, step - 1);
         }
 
-        private int FindScenicScore((int x, int y) tree)
+        private int FindScenicScore((long x, long y) tree)
         {
             return FindEqualOrTallerTreeInDirection(tree, (1, 0)).stepCount * FindEqualOrTallerTreeInDirection(tree, (-1, 0)).stepCount * FindEqualOrTallerTreeInDirection(tree, (0, 1)).stepCount * FindEqualOrTallerTreeInDirection(tree, (0, -1)).stepCount;
         }

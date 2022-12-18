@@ -16,7 +16,7 @@ namespace AdventOfCode2022.Solvers
             var map = new GridMap<char>(InputReader().Parse2DimensionalGrid(), outOfRange);
             var start = map.FindFirst('S');
             var end = map.FindFirst('E');
-            var canStepTo = ((int x, int y) location) => location.NeighbouringLocationsWithoutDiagonals().Where(n =>
+            var canStepTo = ((long x, long y) location) => location.NeighbouringLocationsWithoutDiagonals().Where(n =>
             {
                 var height = map.ReadWithDefault(n, false);
                 if (height == outOfRange)
@@ -59,7 +59,7 @@ namespace AdventOfCode2022.Solvers
             var outOfRange = 'X';
             var map = new GridMap<char>(InputReader().Parse2DimensionalGrid(), outOfRange);
             var end = map.FindFirst('E');
-            var canStepTo = ((int x, int y) location) => location.NeighbouringLocationsWithoutDiagonals().Where(n =>
+            var canStepTo = ((long x, long y) location) => location.NeighbouringLocationsWithoutDiagonals().Where(n =>
             {
                 var height = map.ReadWithDefault(n, false);
                 if (height == outOfRange)

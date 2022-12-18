@@ -60,7 +60,7 @@ namespace AdventOfCode2022.Solvers
         protected override int Solve2()
         {
             var floor = initialMap.Bounds().maxY + 2;
-            var map = initialMap.Copy(((int x, int y) l) => l.y == floor ? '#' : '.');
+            var map = initialMap.Copy(((long x, long y) l) => l.y == floor ? '#' : '.');
 
             var sandAtRest = 0;
             while (map.ReadWithDefault((500, 0)) != 'o')

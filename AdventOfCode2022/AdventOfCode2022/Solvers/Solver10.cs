@@ -40,7 +40,7 @@ namespace AdventOfCode2022.Solvers
 
         protected override long Solve2()
         {
-            var output = new GridMap<char>(new Dictionary<(int x, int y), char>(), '.');
+            var output = new GridMap<char>(new Dictionary<(long x, long y), char>(), '.');
             long X = 1;
             var cycles = 1;
             output.Set((0, 0), '#');

@@ -13,7 +13,17 @@ namespace AoCBase.Vectors
             return (location.x + summand.x, location.y + summand.y);
         }
 
+        public static (long x, long y) Plus(this (long x, long y) location, (long x, long y) summand)
+        {
+            return (location.x + summand.x, location.y + summand.y);
+        }
+
         public static (int x, int y) Minus(this (int x, int y) location, (int x, int y) subtrahend)
+        {
+            return location.Plus(subtrahend.Times(-1));
+        }
+
+        public static (long x, long y) Minus(this (long x, long y) location, (long x, long y) subtrahend)
         {
             return location.Plus(subtrahend.Times(-1));
         }
@@ -28,6 +38,16 @@ namespace AoCBase.Vectors
             return location.Times((multiplicand, multiplicand));
         }
 
+        public static (long x, long y) Times(this (long x, long y) location, (int x, int y) multiplicand)
+        {
+            return (location.x * multiplicand.x, location.y * multiplicand.y);
+        }
+
+        public static (long x, long y) Times(this (long x, long y) location, int multiplicand)
+        {
+            return location.Times((multiplicand, multiplicand));
+        }
+
         public static IEnumerable<(int x, int y)> NeighbouringLocations(this (int x, int y) location)
         {
             var basicDiffs = new List<(int x, int y)> { (1, 0), (0, 1), (1, 1), (1, -1) };
@@ -38,6 +58,12 @@ namespace AoCBase.Vectors
         {
             var basicDiffs = new List<(int x, int y)> { (1, 0), (0, 1) };
             return basicDiffs.SelectMany(d => new List<(int x, int y)> { location.Plus(d), location.Minus(d) });
+        }
+
+        public static IEnumerable<(long x, long y)> NeighbouringLocationsWithoutDiagonals(this (long x, long y) location)
+        {
+            var basicDiffs = new List<(long x, long y)> { (1, 0), (0, 1) };
+            return basicDiffs.SelectMany(d => new List<(long x, long y)> { location.Plus(d), location.Minus(d) });
         }
 
         public static bool IsWithinSquareRadius(this (int x, int y) location, (int x, int y) other, int squareRadius = 1)

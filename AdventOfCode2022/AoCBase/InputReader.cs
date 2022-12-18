@@ -10,32 +10,32 @@ namespace AoCBase
     {
         public InputReader(string filePath) : base(filePath) { }
 
-        public Dictionary<(int x, int y), char> Parse2DimensionalGrid()
+        public Dictionary<(long x, long y), char> Parse2DimensionalGrid()
         {
             return Parse2DimensionalGrid(c => c);
         }
 
-        public Dictionary<(int x, int y), T> Parse2DimensionalGrid<T>(Func<char, T> characterMap)
+        public Dictionary<(long x, long y), T> Parse2DimensionalGrid<T>(Func<char, T> characterMap)
         {
             return ParseGrid(l => l, characterMap);
         }
 
-        public Dictionary<(int x, int y, int z), char> Parse3DimensionalGrid()
+        public Dictionary<(long x, long y, long z), char> Parse3DimensionalGrid()
         {
             return Parse3DimensionalGrid(c => c);
         }
 
-        public Dictionary<(int x, int y, int z), T> Parse3DimensionalGrid<T>(Func<char, T> characterMap)
+        public Dictionary<(long x, long y, long z), T> Parse3DimensionalGrid<T>(Func<char, T> characterMap)
         {
-            return ParseGrid(l => l.ToThreeDimensions(), characterMap);
+            return ParseGrid(l => (l.x, l.y, (long) 0), characterMap);
         }
 
-        public Dictionary<(int x, int y, int z, int w), T> Parse4DimensionalGrid<T>(Func<char, T> characterMap)
+        public Dictionary<(long x, long y, long z, long w), T> Parse4DimensionalGrid<T>(Func<char, T> characterMap)
         {
-            return ParseGrid(l => l.ToFourDimensions(), characterMap);
+            return ParseGrid(l => (l.x, l.y, (long) 0, (long) 0), characterMap);
         }
 
-        public Dictionary<T, U> ParseGrid<T, U>(Func<(int x, int y), T> locationMap, Func<char, U> characterMap)
+        public Dictionary<T, U> ParseGrid<T, U>(Func<(long x, long y), T> locationMap, Func<char, U> characterMap)
         {
             var grid = new Dictionary<T, U>();
             var y = 0;
