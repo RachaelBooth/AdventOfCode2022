@@ -199,7 +199,6 @@ namespace AdventOfCode2022.Solvers
                 {
                     // Have a loop
 
-                    // integer - rounds towards zero in the division
                     var d = Math.DivRem(1000000000000 - rocks, seen.Count - previous);
                     var remainingFullLoops = d.Quotient;
                     var remainder = (int) d.Remainder;
