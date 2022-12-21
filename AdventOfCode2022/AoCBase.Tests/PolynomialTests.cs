@@ -7,8 +7,8 @@ namespace AoCBase.Tests
         [Test]
         public void TestEquality()
         {
-            var p = new Polynomial(1, 2, 0, 1);
-            var q = new Polynomial((0, 1), (3, 1), (1, 2));
+            var p = new IntegerPolynomial(1, 2, 0, 1);
+            var q = new IntegerPolynomial((0, 1), (3, 1), (1, 2));
             Assert.IsTrue(p == q);
             Assert.IsTrue(p.Equals(q));
         }
@@ -20,13 +20,13 @@ namespace AoCBase.Tests
         [TestCase(4, 7, 10, 3)]
         public void SubstituteLinearRepeatingMatchesMultipleSubstitutions(int xCoefficient, int constTerm, int modulus, int timesToRepeat)
         {
-            var result = new Polynomial(constTerm, xCoefficient).SubstituteLinearRepeating(timesToRepeat, modulus);
+            var result = new IntegerPolynomial(constTerm, xCoefficient).SubstituteLinearRepeating(timesToRepeat, modulus);
 
-            var multipleSubsResult = new Polynomial(constTerm, xCoefficient);
+            var multipleSubsResult = new IntegerPolynomial(constTerm, xCoefficient);
             var times = 1;
             while (times < timesToRepeat)
             {
-                multipleSubsResult = multipleSubsResult.Substitute(new Polynomial(constTerm, xCoefficient)) % modulus;
+                multipleSubsResult = multipleSubsResult.Substitute(new IntegerPolynomial(constTerm, xCoefficient)) % modulus;
                 times++;
             }
 
