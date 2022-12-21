@@ -14,6 +14,28 @@ namespace AoCBase
         private Dictionary<(BigInteger modulus, BigInteger value), BigInteger?> inversesCache = new();
         private Dictionary<(BigInteger a, BigInteger b), (BigInteger gcd, BigInteger s, BigInteger t)> bezoutCache = new();
 
+        public static int NonNegativeMod(int value, int modulus)
+        {
+            var result = value % modulus;
+            while (result < 0)
+            {
+                result += modulus;
+            }
+
+            return result;
+        }
+
+        public static int NonNegativeMod(long value, int modulus)
+        {
+            var result = value % modulus;
+            while (result < 0)
+            {
+                result += modulus;
+            }
+
+            return (int) result;
+        }
+
         public static BigInteger NonNegativeMod(BigInteger value, BigInteger modulus)
         {
             var result = value % modulus;
