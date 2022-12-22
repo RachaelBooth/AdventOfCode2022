@@ -95,6 +95,44 @@ namespace AoCBase
             return (t, u);
         }
 
+        public (Dictionary<(long x, long y), T>, List<U>) ReadAsGridThenLines(Func<char, T> characterMap)
+        {
+            var reader = new StreamReader(inputFilePath);
+            string line;
+
+            var grid = new Dictionary<(long x, long y), T>();
+            var u = new List<U>();
+            var inFirstSection = true;
+            var y = 0;
+
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (line != "")
+                {
+                    if (inFirstSection)
+                    {
+                        var x = 0;
+                        while (x < line.Length)
+                        {
+                            grid.Add((x, y), characterMap(line[x]));
+                            x++;
+                        }
+                        y++;
+                    }
+                    else
+                    {
+                        u.Add(ParseLine<U>(line));
+                    }
+                }
+                else
+                {
+                    inFirstSection = false;
+                }
+            }
+
+            return (grid, u);
+        }
+
         private V ParseLine<V>(string line)
         {
             if (typeof(V) == typeof(string))
