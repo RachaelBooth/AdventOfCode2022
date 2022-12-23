@@ -54,6 +54,12 @@ namespace AoCBase.Vectors
             return basicDiffs.SelectMany(d => new List<(int x, int y)> { location.Plus(d), location.Minus(d) });
         }
 
+        public static IEnumerable<(long x, long y)> NeighbouringLocations(this (long x, long y) location)
+        {
+            var basicDiffs = new List<(long x, long y)> { (1, 0), (0, 1), (1, 1), (1, -1) };
+            return basicDiffs.SelectMany(d => new List<(long x, long y)> { location.Plus(d), location.Minus(d) });
+        }
+
         public static IEnumerable<(int x, int y)> NeighbouringLocationsWithoutDiagonals(this (int x, int y) location)
         {
             var basicDiffs = new List<(int x, int y)> { (1, 0), (0, 1) };
